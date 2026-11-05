@@ -11,8 +11,8 @@ why it should win, and a signed ICLA; say whether multiple plugins are one entry
 
 | Required item | Where |
 |---|---|
-| Source code | this repository, `plugins/linux/` (tag of the submitted version in the e-mail) |
-| Memory sample | GitHub Release asset `cbpf-6.1.0-54-cloud-amd64.elf.zst` + ISF, sha256 in `sample/expected/` |
+| Source code | this repository, `plugins/linux/`, tag `v1.0.0` |
+| Memory sample | Release v1.0.0: `cbpf-6.1.0-54-cloud-amd64.elf.zst` and `cbpf-6.12.115+deb13.1-cloud-amd64.elf.zst` + symbol tables + `SHA256SUMS`; uncompressed sha256 in `sample/expected/`. Download, hash check, decompression and a plugin run on the downloaded file were verified on 2026-11-05 |
 | How it is used | `README.md` (Usage, real output) |
 | Write-up | `docs/writeup.md` |
 | Signed ICLA | to be attached by Alan |
@@ -32,9 +32,9 @@ linux.cbpf.SocketFilters (every socket filter, the mechanism BPFDoor uses as its
 tcpdump -d listing with a one-line summary and a hash) and linux.cbpf.Seccomp (each task's seccomp mode,
 no_new_privs and its policy evaluated per system call, with sibling processes that run a different policy flagged).
 
-- Source code, usage and real output: https://github.com/DesignMaster-Solutions/vol3-cbpf (submitted version: tag <TAG>)
-- Memory sample and symbol table: <RELEASE URL> (sha256 in the repository, sample/expected/)
-- Write-up: docs/writeup.md in the repository (also attached as PDF)
+- Source code, usage and real output: https://github.com/DesignMaster-Solutions/vol3-cbpf (submitted version: tag v1.0.0)
+- Memory samples (Debian 6.1 and 6.12 kernels) and symbol tables: https://github.com/DesignMaster-Solutions/vol3-cbpf/releases/tag/v1.0.0 (sha256 in the repository, sample/expected/)
+- Write-up: https://github.com/DesignMaster-Solutions/vol3-cbpf/blob/v1.0.0/docs/writeup.md
 - Signed ICLA: attached
 
 Please evaluate the two plugins together as ONE entry. It is separate from my other submission this year
@@ -43,3 +43,9 @@ Please evaluate the two plugins together as ONE entry. It is separate from my ot
 Thank you,
 Alan De Bortolo
 Design Master Solutions LLC
+
+## Before sending (Alan)
+
+1. Request the ICLA from the Volatility Foundation (already scheduled by the Impressora), sign it, attach it.
+2. Send the e-mail above from the address that will receive the prize correspondence.
+3. If anything changes after v1.0.0, tag a new version and update the tag in the e-mail.
