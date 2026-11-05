@@ -18,7 +18,8 @@ Two Volatility 3 plugins that read the classic BPF (cBPF) programs the Linux ker
   and which worker in a group of identical ones was not, is a question asked after a container escape.
 
 `linux.sockstat` already reports that a socket has a filter (`socket_filter`, `cBPF`) but does not decode it, and
-nothing in Volatility reads seccomp. The eBPF plugins presented in 2023
+no Volatility 3 plugin reads seccomp state (the framework mentions seccomp only as ptrace option flags). The eBPF
+plugins presented in 2023
 ([blog post](https://vobst.github.io/2023/12/21/bpf_memory_forensics_with_volatility_3.html)) leave classic BPF
 out on purpose; the post notes that bvp47, Symbiote and BPFDoor "are using only what is now known as classic BPF".
 The kernel runs a translated eBPF version but keeps the original program in `bpf_prog->orig_prog`, which is what
@@ -133,3 +134,5 @@ instructions, where libpcap prints `unimp`.
 Design, validation and motivation in detail: [`docs/writeup.md`](docs/writeup.md).
 
 Author: Alan De Bortolo, Design Master Solutions LLC. Prepared for the 2026 Volatility Plugin Contest.
+
+License: Volatility Software License 1.0, the license of Volatility 3 ([LICENSE.txt](LICENSE.txt)).

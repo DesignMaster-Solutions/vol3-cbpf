@@ -21,7 +21,8 @@ What Volatility 3 offers today:
 
 - `linux.sockstat` reports that a socket has a filter (`filter_type=socket_filter,bpf_filter_type=cBPF`) but does
   not decode it.
-- Nothing reads seccomp.
+- No plugin reads seccomp state; the framework mentions seccomp only as ptrace option flags
+  (`PTRACE_O_SUSPEND_SECCOMP`, `PT_TRACE_SECCOMP`).
 - The eBPF plugins presented in 2023 deliberately leave classic BPF out; the accompanying post notes that bvp47,
   Symbiote and BPFDoor "are using only what is now known as classic BPF"
   ([vobst, 2023](https://vobst.github.io/2023/12/21/bpf_memory_forensics_with_volatility_3.html)).
@@ -106,7 +107,7 @@ README.
 - **Useful on day one.** It answers two questions responders already ask (what wakes this implant, and who was not
   sandboxed) with output that can be pasted into a report or diffed against `tcpdump -d`.
 - **It closes a gap others named.** sockstat sees the filter but not the program; the eBPF work set classic BPF
-  aside; nothing reads seccomp.
+  aside; no plugin reads seccomp.
 - **Correct by construction, then proven.** The output format is libpcap's, the precedence rules are the kernel's,
   and every claim is checked against ground truth printed inside the guest before the dump, on two kernels.
 - **Reproducible.** One script rebuilds the sample, the symbol table and the expected output from public packages.
