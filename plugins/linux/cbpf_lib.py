@@ -43,65 +43,52 @@ def _s32(v: int) -> int:
     return v - (1 << 32) if v & 0x80000000 else v
 
 
-_ALU_NAMES = {ADD: "add", SUB: "sub", MUL: "mul", DIV: "div", MOD: "mod", AND: "and", OR: "or", XOR: "xor",
-              LSH: "lsh", RSH: "rsh"}
-_ALU_HEX = (AND, OR, XOR)
-_JMP_NAMES = {JEQ: "jeq", JGT: "jgt", JGE: "jge", JSET: "jset"}
-_SIZE_NAMES = {W: "ld", H: "ldh", B: "ldb"}
-
-
 def _abs_operand(k: int) -> str:
     if SKF_AD_OFF <= k < SKF_AD_OFF + SKF_AD_MAX and (k - SKF_AD_OFF) in SKF_AD_NAMES:
         return f"[{SKF_AD_NAMES[k - SKF_AD_OFF]}]"
     return f"[{_s32(k)}]"
 
 
+def _ja(k: int, n: int) -> str:
+    return f"{_s32((n + 1 + k) & 0xFFFFFFFF)}"
+
+
+_HEX = lambda k, n: f"#0x{k:x}"  # noqa: E731
+_DEC = lambda k, n: f"#{_s32(k)}"  # noqa: E731
+_NONE = lambda k, n: ""  # noqa: E731
+_X = lambda k, n: "x"  # noqa: E731
+_MEMF = lambda k, n: f"M[{_s32(k)}]"  # noqa: E731
+_INDF = lambda k, n: f"[x + {_s32(k)}]"  # noqa: E731
+_ABSF = lambda k, n: _abs_operand(k)  # noqa: E731
+
+# Exactly the cases of libpcap 1.10.4 bpf_image(): it switches on the whole 16-bit code, so anything else,
+# including a valid-looking code with stray high bits, prints as "unimp".
+_IMAGE = {
+    RET | K: ("ret", _DEC), RET | A: ("ret", _NONE),
+    LD | W | ABS: ("ld", _ABSF), LD | H | ABS: ("ldh", _ABSF), LD | B | ABS: ("ldb", _ABSF),
+    LD | W | LEN: ("ld", lambda k, n: "#pktlen"),
+    LD | W | IND: ("ld", _INDF), LD | H | IND: ("ldh", _INDF), LD | B | IND: ("ldb", _INDF),
+    LD | IMM: ("ld", _HEX), LDX | IMM: ("ldx", _HEX),
+    LDX | MSH | B: ("ldxb", lambda k, n: f"4*([{_s32(k)}]&0xf)"),
+    LD | MEM: ("ld", _MEMF), LDX | MEM: ("ldx", _MEMF), ST: ("st", _MEMF), STX: ("stx", _MEMF),
+    JMP | JA: ("ja", _ja),
+    JMP | JGT | K: ("jgt", _HEX), JMP | JGE | K: ("jge", _HEX), JMP | JEQ | K: ("jeq", _HEX),
+    JMP | JSET | K: ("jset", _HEX),
+    JMP | JGT | X: ("jgt", _X), JMP | JGE | X: ("jge", _X), JMP | JEQ | X: ("jeq", _X), JMP | JSET | X: ("jset", _X),
+    ALU | NEG: ("neg", _NONE), MISC | TAX: ("tax", _NONE), MISC | TXA: ("txa", _NONE),
+}
+for _op, _name in ((ADD, "add"), (SUB, "sub"), (MUL, "mul"), (DIV, "div"), (MOD, "mod"), (AND, "and"), (OR, "or"),
+                   (XOR, "xor"), (LSH, "lsh"), (RSH, "rsh")):
+    _IMAGE[ALU | _op | X] = (_name, _X)
+    _IMAGE[ALU | _op | K] = (_name, _HEX if _op in (AND, OR, XOR) else _DEC)
+
+
 def image(p: Insn, n: int) -> str:
     """One line in the exact format of libpcap's bpf_image() (what `tcpdump -d` prints)."""
-    c, k = p.code, p.k
-    op, operand = "unimp", f"0x{c:x}"
-    cls = c & 0x07
-    if c == RET | K:
-        op, operand = "ret", f"#{_s32(k)}"
-    elif c == RET | A:
-        op, operand = "ret", ""
-    elif cls == LD and c & 0xE0 == ABS and c & 0x18 in _SIZE_NAMES:
-        op, operand = _SIZE_NAMES[c & 0x18], _abs_operand(k)
-    elif c == LD | W | LEN:
-        op, operand = "ld", "#pktlen"
-    elif cls == LD and c & 0xE0 == IND and c & 0x18 in _SIZE_NAMES:
-        op, operand = _SIZE_NAMES[c & 0x18], f"[x + {_s32(k)}]"
-    elif c == LD | IMM:
-        op, operand = "ld", f"#0x{k:x}"
-    elif c == LDX | IMM:
-        op, operand = "ldx", f"#0x{k:x}"
-    elif c == LDX | MSH | B:
-        op, operand = "ldxb", f"4*([{_s32(k)}]&0xf)"
-    elif c == LD | MEM:
-        op, operand = "ld", f"M[{_s32(k)}]"
-    elif c == LDX | MEM:
-        op, operand = "ldx", f"M[{_s32(k)}]"
-    elif c == ST:
-        op, operand = "st", f"M[{_s32(k)}]"
-    elif c == STX:
-        op, operand = "stx", f"M[{_s32(k)}]"
-    elif c == JMP | JA:
-        op, operand = "ja", f"{_s32((n + 1 + k) & 0xFFFFFFFF)}"
-    elif cls == JMP and c & 0xF0 in _JMP_NAMES and c & ~0xF8 == JMP:
-        op, operand = _JMP_NAMES[c & 0xF0], "x" if c & X else f"#0x{k:x}"
-    elif cls == ALU and c & 0xF0 in _ALU_NAMES and c & ~0xF8 == ALU:
-        if c & X:
-            operand = "x"
-        else:
-            operand = f"#0x{k:x}" if c & 0xF0 in _ALU_HEX else f"#{_s32(k)}"
-        op = _ALU_NAMES[c & 0xF0]
-    elif c == ALU | NEG:
-        op, operand = "neg", ""
-    elif c == MISC | TAX:
-        op, operand = "tax", ""
-    elif c == MISC | TXA:
-        op, operand = "txa", ""
-    if cls == JMP and c & 0xF0 != JA:
+    c = p.code
+    op, fmt = _IMAGE.get(c, ("unimp", lambda k, n: f"0x{c:x}"))
+    operand = fmt(p.k, n)
+    if c & 0x07 == JMP and c & 0xF0 != JA:
         return f"({n:03d}) {op:<8} {operand:<16} jt {n + 1 + p.jt}\tjf {n + 1 + p.jf}"
     return f"({n:03d}) {op:<8} {operand}"
 
@@ -159,9 +146,9 @@ class TooManyPaths(Exception):
 def explore(insns: List[Insn], load, length: Val = Sym("len"), max_paths: int = 512) -> List[Path]:
     """Every path from the first instruction to a return. `load(offset, size)` gives the input bytes."""
     out: List[Path] = []
-    stack = [(0, 0, 0, (0,) * 16, ())]  # pc, A, X, M, conds
+    stack = [(0, 0, 0, (0,) * 16, (), {})]  # pc, A, X, M, conds, facts {expr: value it equals / set it is not}
     while stack:
-        pc, a, x, m, conds = stack.pop()
+        pc, a, x, m, conds, facts = stack.pop()
         while True:
             if pc >= len(insns):
                 out.append(Path(Sym("fell-off-end"), conds))
@@ -179,7 +166,7 @@ def explore(insns: List[Insn], load, length: Val = Sym("len"), max_paths: int = 
                 elif mode == ABS:
                     v = load(k, size)
                 elif mode == IND:
-                    v = load(k, size) if x == 0 else load(Sym(f"x+{k}") if isinstance(x, Sym) else x + k, size)
+                    v = load(Sym(f"{x.expr}+{k}") if isinstance(x, Sym) else (x + k) & 0xFFFFFFFF, size)
                 elif mode == MEM:
                     v = m[k & 15]
                 elif mode == LEN:
@@ -209,11 +196,23 @@ def explore(insns: List[Insn], load, length: Val = Sym("len"), max_paths: int = 
                 if op == JA:
                     pc += k
                     continue
-                decided, ct, cf = _cond(op, a, x if c & X else k)
+                b = x if c & X else k
+                decided, ct, cf = _cond(op, a, b)
+                if decided is None and op == JEQ and isinstance(a, Sym) and isinstance(b, int):
+                    known = facts.get(a.expr)
+                    if isinstance(known, int):
+                        decided = known == b
+                    elif known and b in known:
+                        decided = False  # this path already established a != b
                 if decided is None:
                     if len(out) + len(stack) > max_paths:
                         raise TooManyPaths()
-                    stack.append((pc + p.jf, a, x, m, conds + (cf,)))
+                    ffacts = facts
+                    if op == JEQ and isinstance(a, Sym) and isinstance(b, int):
+                        prev = facts.get(a.expr)
+                        ffacts = {**facts, a.expr: (prev if isinstance(prev, frozenset) else frozenset()) | {b}}
+                        facts = {**facts, a.expr: b}
+                    stack.append((pc + p.jf, a, x, m, conds + (cf,), ffacts))
                     pc, conds = pc + p.jt, conds + (ct,)
                 else:
                     pc += p.jt if decided else p.jf
@@ -224,17 +223,29 @@ def explore(insns: List[Insn], load, length: Val = Sym("len"), max_paths: int = 
 
 # Names for byte offsets when the filter sees an Ethernet frame (AF_PACKET SOCK_RAW, tcpdump on Ethernet/lo).
 ETHER_FIELDS = {(12, 2): "ether.type", (23, 1): "ip.proto", (20, 2): "ip.frag", (26, 4): "ip.src", (30, 4): "ip.dst",
-                (14, 1): "ip.vhl", (20, 1): "ip6.nxt", (22, 4): "ip6.src[0]", (38, 4): "ip6.dst[0]"}
+                (14, 1): "ip.vhl", (20, 1): "ip6.nxt", (22, 4): "ip6.src[0]", (38, 4): "ip6.dst[0]",
+                (54, 2): "ip6.l4[0:2]", (56, 2): "ip6.l4[2:2]"}
 
 
 def _ascii(v: int) -> str:
     b = v.to_bytes(4, "big").lstrip(b"\0")
-    return f' "{b.decode()}"' if b and all(0x20 <= ch < 0x7F for ch in b) else ""
+    return f' "{b.decode()}"' if len(b) > 1 and all(0x20 <= ch < 0x7F for ch in b) else ""
+
+
+def _annotate(cond: str) -> str:
+    """Adds ASCII to magic constants and decimal to transport-layer fields (ports)."""
+    if "== 0x" not in cond and "!= 0x" not in cond:
+        return cond
+    v = int(cond.rsplit("0x", 1)[1], 16)
+    return cond + (f" ({v})" if cond.startswith(("l4[", "ip6.l4[")) and v < 0x10000 else "") + _ascii(v)
 
 
 def socket_load(fields: Dict[Tuple[int, int], str]):
     def load(off, size):
         if isinstance(off, Sym):
+            base, _, k = off.expr.rpartition("+")
+            if fields and base == "4*(ip.vhl&0xf)" and k.isdigit():  # x = IPv4 header length (ldxb 4*([14]&0xf))
+                return Sym(f"l4[{int(k) - 14}:{size}]")
             return Sym(f"pkt[{off.expr}:{size}]")
         if off >= SKF_AD_OFF:
             return Sym(SKF_AD_NAMES.get(off - SKF_AD_OFF, f"ad{off - SKF_AD_OFF}"))
@@ -257,7 +268,8 @@ def summarize_socket_filter(insns: List[Insn], ethernet: bool = True, max_paths:
         return f"accepts every packet (snaplen {accept[0].ret if isinstance(accept[0].ret, int) else 'A'})"
     parts = []
     for p in accept[:max_paths]:
-        conds = [c + _ascii(int(c.rsplit("0x", 1)[1], 16)) if "== 0x" in c else c for c in p.conds]
+        eq = {c.split(" == ")[0] for c in p.conds if " == " in c}
+        conds = [_annotate(c) for c in p.conds if not (" != " in c and c.split(" != ")[0] in eq)]
         parts.append("(" + " and ".join(conds) + ")" if conds else "(always)")
     more = f" or {len(accept) - max_paths} more" if len(accept) > max_paths else ""
     return "accept if " + " or ".join(parts) + more

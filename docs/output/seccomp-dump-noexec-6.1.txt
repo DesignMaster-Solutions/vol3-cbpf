@@ -1,0 +1,23 @@
+Volatility 3 Framework 2.28.2
+
+PID	TID	PPID	Process	Mode	NoNewPrivs	Filters	Policy	Siblings	Summary
+
+103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		default ALLOW; ERRNO(1) 2: execve,execveat; ERRNO(13) 2: mount,umount2; i386 KILL_PROCESS; x32 ALLOW (kernel built without the x32 ABI)
+* 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		filter 0 (newest first): 8 insns
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(000) ld       [4]
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(001) jeq      #0xc000003e      jt 2	jf 6
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(002) ld       [0]
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(003) jeq      #0x3b            jt 7	jf 4
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(004) jeq      #0x142           jt 7	jf 5
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(005) ret      #2147418112
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(006) ret      #-2147483648
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(007) ret      #327681
+* 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		filter 1 (newest first): 8 insns
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(000) ld       [4]
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(001) jeq      #0xc000003e      jt 2	jf 6
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(002) ld       [0]
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(003) jeq      #0xa5            jt 7	jf 4
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(004) jeq      #0xa6            jt 7	jf 5
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(005) ret      #2147418112
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(006) ret      #-2147483648
+** 103	103	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		(007) ret      #327693

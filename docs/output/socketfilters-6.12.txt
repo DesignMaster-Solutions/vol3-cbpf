@@ -1,0 +1,8 @@
+Volatility 3 Framework 2.28.2
+
+PID	Process	FD	Family	Type	Protocol	Sock	Kind	Insns	SHA256	Program
+
+142	tcpdump	4	AF_PACKET	RAW	ETH_P_ALL	0x8f4901f2c800	cBPF	16	bffed42c27444b1ffa36bd5f846ffe29d58bc655229db1f9f871c984a39ae7a0	accept if (ether.type == 0x800 and ip.proto == 0x11 and !(ip.frag & 0x1fff) and l4[2:2] == 0x35 (53)) or (ether.type == 0x86dd and ip6.nxt == 0x11 and ip6.l4[2:2] == 0x35 (53))
+147	tcpdump	4	AF_PACKET	RAW	ETH_P_ALL	0x8f4901c6b800	cBPF	14	a2e1df11d35d0a05392d9d51f19c53a1e73349464c339e5e4eb1251bc4ac7ebd	accept if (ether.type == 0x800 and ip.proto == 0x6 and !(ip.frag & 0x1fff) and l4[13:1] & 0x3 and (ip.src & 0xff000000) != 0xa000000)
+148	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x8f4901f2c000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	accept if (ether.type == 0x800 and ip.proto == 0x11 and !(ip.frag & 0x1fff) and l4[8:4] == 0x43425046 "CBPF")
+149	cbpf-udptrigger	3	AF_INET	DGRAM	UDP	0x8f4901c73180	cBPF	6	8579baf8c44cfc504be04be4b6c6e0ee76d00fbc2487118ba717d55e58e35808	accept if (len >= 0xc and pkt[8:4] == 0x43425046 "CBPF")

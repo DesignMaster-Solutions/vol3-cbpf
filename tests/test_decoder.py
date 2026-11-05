@@ -93,3 +93,20 @@ LIBPCAP_AD = {0: "proto", 4: "type", 8: "ifidx", 12: "nla", 16: "nlan", 20: "mar
 def test_ancillary_names(off):
     want = f"[{LIBPCAP_AD[off]}]" if off in LIBPCAP_AD else f"[{off - 4096}]"
     assert L.image(I(0x20, 0xFFFFF000 + off), 0) == f"(000) ld       {want}"
+
+
+# The 48 codes libpcap 1.10.4 bpf_image() has a case for; every other 16-bit code must print "unimp".
+LIBPCAP_CODES = {0x06, 0x16, 0x20, 0x28, 0x30, 0x80, 0x40, 0x48, 0x50, 0x00, 0x01, 0xB1, 0x60, 0x61, 0x02, 0x03,
+                 0x05, 0x25, 0x35, 0x15, 0x45, 0x2D, 0x3D, 0x1D, 0x4D, 0x0C, 0x1C, 0x2C, 0x3C, 0x9C, 0x5C, 0x4C,
+                 0xAC, 0x6C, 0x7C, 0x04, 0x14, 0x24, 0x34, 0x94, 0x54, 0x44, 0xA4, 0x64, 0x74, 0x84, 0x07, 0x87}
+
+
+def test_every_other_code_is_unimp():
+    assert len(LIBPCAP_CODES) == 48
+    for code in range(0x10000):
+        line = L.image(I(code, 5, 1, 2), 3)
+        if code in LIBPCAP_CODES:
+            assert "unimp" not in line, hex(code)
+        else:
+            tail = "jt 5\tjf 6" if code & 7 == 5 and code & 0xF0 != 0 else ""
+            assert line == f"(003) {'unimp':<8} " + (f"{f'0x{code:x}':<16} {tail}" if tail else f"0x{code:x}"), hex(code)

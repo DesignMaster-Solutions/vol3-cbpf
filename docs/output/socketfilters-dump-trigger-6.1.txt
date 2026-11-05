@@ -1,0 +1,16 @@
+Volatility 3 Framework 2.28.2
+
+PID	Process	FD	Family	Type	Protocol	Sock	Kind	Insns	SHA256	Program
+
+95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	accept if (ether.type == 0x800 and ip.proto == 0x11 and !(ip.frag & 0x1fff) and l4[8:4] == 0x43425046 "CBPF")
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(000) ldh      [12]
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(001) jeq      #0x800           jt 2	jf 10
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(002) ldb      [23]
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(003) jeq      #0x11            jt 4	jf 10
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(004) ldh      [20]
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(005) jset     #0x1fff          jt 10	jf 6
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(006) ldxb     4*([14]&0xf)
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(007) ld       [x + 22]
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(008) jeq      #0x43425046      jt 9	jf 10
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(009) ret      #65535
+* 95	cbpf-trigger	3	AF_PACKET	RAW	ETH_P_ALL	0x89fac1072000	cBPF	11	178789198798fc7ba1c5dc194d4eb953a0a76a3907443cd2294fec7fdcb18654	(010) ret      #0

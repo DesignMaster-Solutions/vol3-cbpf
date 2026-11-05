@@ -8,3 +8,6 @@ sample/work/
 __pycache__/
 *.pyc
 .pytest_cache/
+mutants/
+.mutmut-cache
+sample/work-*/

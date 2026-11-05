@@ -1,0 +1,11 @@
+Volatility 3 Framework 2.28.2
+
+PID	TID	PPID	Process	Mode	NoNewPrivs	Filters	Policy	Siblings	Summary
+
+152	152	1	cbpf-strict	strict	False	0	strict		default KILL_THREAD; ALLOW 4: read,write,rt_sigreturn,exit; i386 KILL_THREAD; x32 KILL_THREAD (kernel built without the x32 ABI)
+154	154	1	cbpf-dockerish	filter	False	1	a8ddec582eb62e12		default ERRNO(1); ALLOW|ERRNO(1) (depends on arguments) 1: personality; ALLOW 71: read,write,close,stat,fstat,poll,lseek,mmap,mprotect,munmap,brk,rt_sigaction,+59; i386 KILL_THREAD; x32 KILL_THREAD (kernel built without the x32 ABI)
+156	156	1	cbpf-noexec	filter	True	2	6c6888771bca4ad5		default ALLOW; ERRNO(1) 2: execve,execveat; ERRNO(13) 2: mount,umount2; i386 KILL_PROCESS; x32 ALLOW (kernel built without the x32 ABI)
+160	160	158	cbpf-pool	filter	True	1	58e5c97672d3b446		default KILL_PROCESS; ALLOW 16: read,write,close,mmap,munmap,brk,rt_sigaction,rt_sigprocmask,rt_sigreturn,pause,nanosleep,getpid,+4; i386 KILL_THREAD; x32 KILL_THREAD (kernel built without the x32 ABI)
+161	161	158	cbpf-pool	filter	True	1	58e5c97672d3b446		default KILL_PROCESS; ALLOW 16: read,write,close,mmap,munmap,brk,rt_sigaction,rt_sigprocmask,rt_sigreturn,pause,nanosleep,getpid,+4; i386 KILL_THREAD; x32 KILL_THREAD (kernel built without the x32 ABI)
+162	162	158	cbpf-pool	disabled	False	0	none	DIFFERS: 3 of 4 siblings run 58e5c97672d3b446	no seccomp
+163	163	158	cbpf-pool	filter	True	1	58e5c97672d3b446		default KILL_PROCESS; ALLOW 16: read,write,close,mmap,munmap,brk,rt_sigaction,rt_sigprocmask,rt_sigreturn,pause,nanosleep,getpid,+4; i386 KILL_THREAD; x32 KILL_THREAD (kernel built without the x32 ABI)
