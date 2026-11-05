@@ -41,13 +41,15 @@ no_new_privs and its policy evaluated per system call, with sibling processes th
 Please evaluate the two plugins together as ONE entry. It is separate from my other submission this year
 (io_uring plugins, repository vol3-io-uring), which should be evaluated as its own entry.
 
+Donated under Volatility Foundation, Inc. Individual Contributor Licensing Agreement
+
 Thank you,
 Alan De Bortolo
 Design Master Solutions LLC
 
 ## Before sending (Alan)
 
-1. Request the ICLA from the Volatility Foundation (already scheduled by the Impressora), sign it, attach it.
+1. The ICLA arrived from the Volatility Foundation on 2026-11-05: sign it and attach it (it grants the Foundation dual shared ownership of the contributed code; the e-mail above carries the "Donated under ..." marking it asks for).
 2. Send the e-mail above from the address that will receive the prize correspondence.
 3. If anything changes after v1.0.1, tag a new version and update the tag in the e-mail.
 4. Decide on an AI-assistance note, the same for both entries (vol3-io-uring has the same item): other deliveries
