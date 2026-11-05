@@ -1,0 +1,48 @@
+#!/bin/sh
+# PID 1 of the sample guest: install known classic BPF programs, print the truth, then idle.
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t devtmpfs dev /dev 2>/dev/null
+ip link set lo up
+exec > /dev/console 2>&1
+echo "GUEST_BOOTED $(uname -r)"
+tcpdump --version 2>&1 | head -2
+
+# (a) two tcpdump captures on lo; -d is what libpcap compiles for the same interface.
+E1='udp and dst port 53'
+E2='tcp[tcpflags] & (tcp-syn|tcp-fin) != 0 and not src net 10.0.0.0/8'
+i=0
+for E in "$E1" "$E2"; do
+  i=$((i+1))
+  echo "TRUTH tcpdump$i expr=$E"
+  tcpdump -i lo -d "$E" | sed "s/^/TRUTH tcpdump$i d /"
+  tcpdump -i lo -dd "$E" | sed "s/^/TRUTH tcpdump$i dd /"
+  tcpdump -i lo -n -w /dev/null "$E" &
+  echo "TRUTH tcpdump$i pid=$!"
+done
+
+# (b) trigger-shaped filters that only count.
+/usr/local/bin/cbpf-trigger trigger &
+/usr/local/bin/cbpf-udptrigger udptrigger &
+sleep 2
+/usr/local/bin/cbpf_demo send
+
+# (c) seccomp.
+# One at a time, so their printed policies do not interleave on the console.
+/usr/local/bin/cbpf-strict strict & sleep 1
+/usr/local/bin/cbpf-dockerish dockerish & sleep 2
+/usr/local/bin/cbpf-noexec noexec & sleep 1
+/usr/local/bin/cbpf-pool pool & sleep 4
+
+ps -o pid,ppid,comm,args
+for p in /proc/[0-9]*; do
+  n=$(cat $p/comm 2>/dev/null) || continue
+  s=$(grep -E '^(NoNewPrivs|Seccomp|Seccomp_filters):' $p/status | tr -s '\t\n' '  ')
+  echo "TRUTH status pid=${p#/proc/} comm=$n $s"
+  for fd in $p/fd/*; do
+    l=$(readlink $fd 2>/dev/null) && case "$l" in socket:*) echo "TRUTH fd pid=${p#/proc/} fd=${fd##*/} $l";; esac
+  done
+done
+cat /proc/net/packet
+echo "GUEST_READY_FOR_DUMP"
+while true; do sleep 3600; done

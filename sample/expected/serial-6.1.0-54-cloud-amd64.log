@@ -1,0 +1,543 @@
+GUEST_BOOTED 6.1.0-54-cloud-amd64
+tcpdump version 4.99.4
+libpcap version 1.10.4 (with TPACKET_V3)
+TRUTH tcpdump1 expr=udp and dst port 53
+TRUTH tcpdump1 d (000) ldh      [12]
+TRUTH tcpdump1 d (001) jeq      #0x800           jt 2	jf 9
+TRUTH tcpdump1 d (002) ldb      [23]
+TRUTH tcpdump1 d (003) jeq      #0x11            jt 4	jf 15
+TRUTH tcpdump1 d (004) ldh      [20]
+TRUTH tcpdump1 d (005) jset     #0x1fff          jt 15	jf 6
+TRUTH tcpdump1 d (006) ldxb     4*([14]&0xf)
+TRUTH tcpdump1 d (007) ldh      [x + 16]
+TRUTH tcpdump1 d (008) jeq      #0x35            jt 14	jf 15
+TRUTH tcpdump1 d (009) jeq      #0x86dd          jt 10	jf 15
+TRUTH tcpdump1 d (010) ldb      [20]
+TRUTH tcpdump1 d (011) jeq      #0x11            jt 12	jf 15
+TRUTH tcpdump1 d (012) ldh      [56]
+TRUTH tcpdump1 d (013) jeq      #0x35            jt 14	jf 15
+TRUTH tcpdump1 d (014) ret      #262144
+TRUTH tcpdump1 d (015) ret      #0
+TRUTH tcpdump1 dd { 0x28, 0, 0, 0x0000000c },
+TRUTH tcpdump1 dd { 0x15, 0, 7, 0x00000800 },
+TRUTH tcpdump1 dd { 0x30, 0, 0, 0x00000017 },
+TRUTH tcpdump1 dd { 0x15, 0, 11, 0x00000011 },
+TRUTH tcpdump1 dd { 0x28, 0, 0, 0x00000014 },
+TRUTH tcpdump1 dd { 0x45, 9, 0, 0x00001fff },
+TRUTH tcpdump1 dd { 0xb1, 0, 0, 0x0000000e },
+TRUTH tcpdump1 dd { 0x48, 0, 0, 0x00000010 },
+TRUTH tcpdump1 dd { 0x15, 5, 6, 0x00000035 },
+TRUTH tcpdump1 dd { 0x15, 0, 5, 0x000086dd },
+TRUTH tcpdump1 dd { 0x30, 0, 0, 0x00000014 },
+TRUTH tcpdump1 dd { 0x15, 0, 3, 0x00000011 },
+TRUTH tcpdump1 dd { 0x28, 0, 0, 0x00000038 },
+TRUTH tcpdump1 dd { 0x15, 0, 1, 0x00000035 },
+TRUTH tcpdump1 dd { 0x6, 0, 0, 0x00040000 },
+TRUTH tcpdump1 dd { 0x6, 0, 0, 0x00000000 },
+TRUTH tcpdump1 pid=89
+TRUTH tcpdump2 expr=tcp[tcpflags] & (tcp-syn|tcp-fin) != 0 and not src net 10.0.0.0/8
+tcpdump: listening on lo, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+TRUTH tcpdump2 d (000) ldh      [12]
+TRUTH tcpdump2 d (001) jeq      #0x800           jt 2	jf 13
+TRUTH tcpdump2 d (002) ldb      [23]
+TRUTH tcpdump2 d (003) jeq      #0x6             jt 4	jf 13
+TRUTH tcpdump2 d (004) ldh      [20]
+TRUTH tcpdump2 d (005) jset     #0x1fff          jt 13	jf 6
+TRUTH tcpdump2 d (006) ldxb     4*([14]&0xf)
+TRUTH tcpdump2 d (007) ldb      [x + 27]
+TRUTH tcpdump2 d (008) jset     #0x3             jt 9	jf 13
+TRUTH tcpdump2 d (009) ld       [26]
+TRUTH tcpdump2 d (010) and      #0xff000000
+TRUTH tcpdump2 d (011) jeq      #0xa000000       jt 13	jf 12
+TRUTH tcpdump2 d (012) ret      #262144
+TRUTH tcpdump2 d (013) ret      #0
+TRUTH tcpdump2 dd { 0x28, 0, 0, 0x0000000c },
+TRUTH tcpdump2 dd { 0x15, 0, 11, 0x00000800 },
+TRUTH tcpdump2 dd { 0x30, 0, 0, 0x00000017 },
+TRUTH tcpdump2 dd { 0x15, 0, 9, 0x00000006 },
+TRUTH tcpdump2 dd { 0x28, 0, 0, 0x00000014 },
+TRUTH tcpdump2 dd { 0x45, 7, 0, 0x00001fff },
+TRUTH tcpdump2 dd { 0xb1, 0, 0, 0x0000000e },
+TRUTH tcpdump2 dd { 0x50, 0, 0, 0x0000001b },
+TRUTH tcpdump2 dd { 0x45, 0, 4, 0x00000003 },
+TRUTH tcpdump2 dd { 0x20, 0, 0, 0x0000001a },
+TRUTH tcpdump2 dd { 0x54, 0, 0, 0xff000000 },
+TRUTH tcpdump2 dd { 0x15, 1, 0, 0x0a000000 },
+TRUTH tcpdump2 dd { 0x6, 0, 0, 0x00040000 },
+TRUTH tcpdump2 dd { 0x6, 0, 0, 0x00000000 },
+TRUTH tcpdump2 pid=94
+TRUTH trigger pid=95 fd=3 len=11
+TRUTH trigger dd { 0x28, 0, 0, 0x0000000c },
+TRUTH trigger dd { 0x15, 0, 8, 0x00000800 },
+TRUTH trigger dd { 0x30, 0, 0, 0x00000017 },
+TRUTH trigger dd { 0x15, 0, 6, 0x00000011 },
+TRUTH udptrigger pid=96 fd=3 len=6
+TRUTH udptrigger dd { 0x80, 0, 0, 0x00000000 },
+TRUTH udptrigger dd { 0x35, 0, 3, 0x0000000c },
+TRUTH udptrigger dd { 0x20, 0, 0, 0x00000008 },
+TRUTH udptrigger dd { 0x15, 0, 1, 0x43425046 },
+TRUTH udptrigger dd { 0x16, 0, 0, 0x00000000 },
+TRUTH udptrigger dd { 0x6, 0, 0, 0x00000000 },
+TRUTH trigger dd { 0x28, 0, 0, 0x00000014 },
+TRUTH trigger dd { 0x45, 4, 0, 0x00001fff },
+TRUTH trigger dd { 0xb1, 0, 0, 0x0000000e },
+TRUTH trigger dd { 0x40, 0, 0, 0x00000016 },
+TRUTH trigger dd { 0x15, 0, 1, 0x43425046 },
+TRUTH trigger dd { 0x6, 0, 0, 0x0000ffff },
+TRUTH trigger dd { 0x6, 0, 0, 0x00000000 },
+tcpdump: listening on lo, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+trigger: matched packet #1 (counted only)
+trigger: matched packet #2 (counted only)
+udptrigger: accepted datagram #1 (counted only)
+trigger: matched packet #3 (counted only)
+trigger: matched packet #4 (counted only)
+udptrigger: accepted datagram #2 (counted only)
+send: 3 datagrams to 127.0.0.1:40000, 2 with the marker
+TRUTH seccomp strict pid=99 default=KILL mode=strict
+TRUTH seccomp dockerish pid=101 default=ERRNO(1) allow=accept,accept4,access,alarm,bind,brk,chdir,chmod,chown,clock_gettime,clock_nanosleep,close,connect,dup,dup2,dup3,epoll_create1,epoll_ctl,epoll_pwait,epoll_wait,execve,exit,exit_group,fchmod,fcntl,fstat,futex,getcwd,getdents64,getegid,geteuid,getgid,getpid,getppid,getrandom,getuid,ioctl,listen,lseek,madvise,mmap,mprotect,munmap,nanosleep,newfstatat,openat,pause,pipe2,poll,pread64,prlimit64,read,readlink,recvfrom,recvmsg,rt_sigaction,rt_sigprocmask,rt_sigreturn,sched_yield,select,sendmsg,sendto,set_robust_list,set_tid_address,setsockopt,socket,stat,uname,wait4,write,writev argdep=personality
+TRUTH seccomp dockerish pfc-begin
+#
+# pseudo filter code start
+#
+# filter for arch x86_64 (3221225534)
+if ($arch == 3221225534)
+  # filter for syscall "getrandom" (318) [priority: 65535]
+  if ($syscall == 318)
+    action ALLOW;
+  # filter for syscall "prlimit64" (302) [priority: 65535]
+  if ($syscall == 302)
+    action ALLOW;
+  # filter for syscall "pipe2" (293) [priority: 65535]
+  if ($syscall == 293)
+    action ALLOW;
+  # filter for syscall "dup3" (292) [priority: 65535]
+  if ($syscall == 292)
+    action ALLOW;
+  # filter for syscall "epoll_create1" (291) [priority: 65535]
+  if ($syscall == 291)
+    action ALLOW;
+  # filter for syscall "accept4" (288) [priority: 65535]
+  if ($syscall == 288)
+    action ALLOW;
+  # filter for syscall "epoll_pwait" (281) [priority: 65535]
+  if ($syscall == 281)
+    action ALLOW;
+  # filter for syscall "set_robust_list" (273) [priority: 65535]
+  if ($syscall == 273)
+    action ALLOW;
+  # filter for syscall "newfstatat" (262) [priority: 65535]
+  if ($syscall == 262)
+    action ALLOW;
+  # filter for syscall "openat" (257) [priority: 65535]
+  if ($syscall == 257)
+    action ALLOW;
+  # filter for syscall "epoll_ctl" (233) [priority: 65535]
+  if ($syscall == 233)
+    action ALLOW;
+  # filter for syscall "epoll_wait" (232) [priority: 65535]
+  if ($syscall == 232)
+    action ALLOW;
+  # filter for syscall "exit_group" (231) [priority: 65535]
+  if ($syscall == 231)
+    action ALLOW;
+  # filter for syscall "clock_nanosleep" (230) [priority: 65535]
+  if ($syscall == 230)
+    action ALLOW;
+  # filter for syscall "clock_gettime" (228) [priority: 65535]
+  if ($syscall == 228)
+    action ALLOW;
+  # filter for syscall "set_tid_address" (218) [priority: 65535]
+  if ($syscall == 218)
+    action ALLOW;
+  # filter for syscall "getdents64" (217) [priority: 65535]
+  if ($syscall == 217)
+    action ALLOW;
+  # filter for syscall "futex" (202) [priority: 65535]
+  if ($syscall == 202)
+    action ALLOW;
+  # filter for syscall "getppid" (110) [priority: 65535]
+  if ($syscall == 110)
+    action ALLOW;
+  # filter for syscall "getegid" (108) [priority: 65535]
+  if ($syscall == 108)
+    action ALLOW;
+  # filter for syscall "geteuid" (107) [priority: 65535]
+  if ($syscall == 107)
+    action ALLOW;
+  # filter for syscall "getgid" (104) [priority: 65535]
+  if ($syscall == 104)
+    action ALLOW;
+  # filter for syscall "getuid" (102) [priority: 65535]
+  if ($syscall == 102)
+    action ALLOW;
+  # filter for syscall "chown" (92) [priority: 65535]
+  if ($syscall == 92)
+    action ALLOW;
+  # filter for syscall "fchmod" (91) [priority: 65535]
+  if ($syscall == 91)
+    action ALLOW;
+  # filter for syscall "chmod" (90) [priority: 65535]
+  if ($syscall == 90)
+    action ALLOW;
+  # filter for syscall "readlink" (89) [priority: 65535]
+  if ($syscall == 89)
+    action ALLOW;
+  # filter for syscall "chdir" (80) [priority: 65535]
+  if ($syscall == 80)
+    action ALLOW;
+  # filter for syscall "getcwd" (79) [priority: 65535]
+  if ($syscall == 79)
+    action ALLOW;
+  # filter for syscall "fcntl" (72) [priority: 65535]
+  if ($syscall == 72)
+    action ALLOW;
+  # filter for syscall "uname" (63) [priority: 65535]
+  if ($syscall == 63)
+    action ALLOW;
+  # filter for syscall "wait4" (61) [priority: 65535]
+  if ($syscall == 61)
+    action ALLOW;
+  # filter for syscall "exit" (60) [priority: 65535]
+  if ($syscall == 60)
+    action ALLOW;
+  # filter for syscall "execve" (59) [priority: 65535]
+  if ($syscall == 59)
+    action ALLOW;
+  # filter for syscall "setsockopt" (54) [priority: 65535]
+  if ($syscall == 54)
+    action ALLOW;
+  # filter for syscall "listen" (50) [priority: 65535]
+  if ($syscall == 50)
+    action ALLOW;
+  # filter for syscall "bind" (49) [priority: 65535]
+  if ($syscall == 49)
+    action ALLOW;
+  # filter for syscall "recvmsg" (47) [priority: 65535]
+  if ($syscall == 47)
+    action ALLOW;
+  # filter for syscall "sendmsg" (46) [priority: 65535]
+  if ($syscall == 46)
+    action ALLOW;
+  # filter for syscall "recvfrom" (45) [priority: 65535]
+  if ($syscall == 45)
+    action ALLOW;
+  # filter for syscall "sendto" (44) [priority: 65535]
+  if ($syscall == 44)
+    action ALLOW;
+  # filter for syscall "accept" (43) [priority: 65535]
+  if ($syscall == 43)
+    action ALLOW;
+  # filter for syscall "connect" (42) [priority: 65535]
+  if ($syscall == 42)
+    action ALLOW;
+  # filter for syscall "socket" (41) [priority: 65535]
+  if ($syscall == 41)
+    action ALLOW;
+  # filter for syscall "getpid" (39) [priority: 65535]
+  if ($syscall == 39)
+    action ALLOW;
+  # filter for syscall "alarm" (37) [priority: 65535]
+  if ($syscall == 37)
+    action ALLOW;
+  # filter for syscall "nanosleep" (35) [priority: 65535]
+  if ($syscall == 35)
+    action ALLOW;
+  # filter for syscall "pause" (34) [priority: 65535]
+  if ($syscall == 34)
+    action ALLOW;
+  # filter for syscall "dup2" (33) [priority: 65535]
+  if ($syscall == 33)
+    action ALLOW;
+  # filter for syscall "dup" (32) [priority: 65535]
+  if ($syscall == 32)
+    action ALLOW;
+  # filter for syscall "madvise" (28) [priority: 65535]
+  if ($syscall == 28)
+    action ALLOW;
+  # filter for syscall "sched_yield" (24) [priority: 65535]
+  if ($syscall == 24)
+    action ALLOW;
+  # filter for syscall "select" (23) [priority: 65535]
+  if ($syscall == 23)
+    action ALLOW;
+  # filter for syscall "access" (21) [priority: 65535]
+  if ($syscall == 21)
+    action ALLOW;
+  # filter for syscall "writev" (20) [priority: 65535]
+  if ($syscall == 20)
+    action ALLOW;
+  # filter for syscall "pread64" (17) [priority: 65535]
+  if ($syscall == 17)
+    action ALLOW;
+  # filter for syscall "ioctl" (16) [priority: 65535]
+  if ($syscall == 16)
+    action ALLOW;
+  # filter for syscall "rt_sigreturn" (15) [priority: 65535]
+  if ($syscall == 15)
+    action ALLOW;
+  # filter for syscall "rt_sigprocmask" (14) [priority: 65535]
+  if ($syscall == 14)
+    action ALLOW;
+  # filter for syscall "rt_sigaction" (13) [priority: 65535]
+  if ($syscall == 13)
+    action ALLOW;
+  # filter for syscall "brk" (12) [priority: 65535]
+  if ($syscall == 12)
+    action ALLOW;
+  # filter for syscall "munmap" (11) [priority: 65535]
+  if ($syscall == 11)
+    action ALLOW;
+  # filter for syscall "mprotect" (10) [priority: 65535]
+  if ($syscall == 10)
+    action ALLOW;
+  # filter for syscall "mmap" (9) [priority: 65535]
+  if ($syscall == 9)
+    action ALLOW;
+  # filter for syscall "lseek" (8) [priority: 65535]
+  if ($syscall == 8)
+    action ALLOW;
+  # filter for syscall "poll" (7) [priority: 65535]
+  if ($syscall == 7)
+    action ALLOW;
+  # filter for syscall "fstat" (5) [priority: 65535]
+  if ($syscall == 5)
+    action ALLOW;
+  # filter for syscall "stat" (4) [priority: 65535]
+  if ($syscall == 4)
+    action ALLOW;
+  # filter for syscall "close" (3) [priority: 65535]
+  if ($syscall == 3)
+    action ALLOW;
+  # filter for syscall "write" (1) [priority: 65535]
+  if ($syscall == 1)
+    action ALLOW;
+  # filter for syscall "read" (0) [priority: 65535]
+  if ($syscall == 0)
+    action ALLOW;
+  # filter for syscall "personality" (135) [priority: 65530]
+  if ($syscall == 135)
+    if ($a0.hi32 == 0)
+      if ($a0.lo32 == 4294967295)
+        action ALLOW;
+      if ($a0.lo32 == 131072)
+        action ALLOW;
+      if ($a0.lo32 == 8)
+        action ALLOW;
+      if ($a0.lo32 == 0)
+        action ALLOW;
+  # default action
+  action ERRNO(1);
+# invalid architecture action
+action KILL;
+#
+# pseudo filter code end
+#
+TRUTH seccomp dockerish pfc-end
+TRUTH seccomp noexec pid=103 default=ALLOW nnp=1 filters=2 errno13=mount,umount2 errno1=execve,execveat badarch=KILL_PROCESS
+TRUTH noexec-1 dd { 0x20, 0, 0, 0x00000004 },
+TRUTH noexec-1 dd { 0x15, 0, 4, 0xc000003e },
+TRUTH noexec-1 dd { 0x20, 0, 0, 0x00000000 },
+TRUTH noexec-1 dd { 0x15, 3, 0, 0x000000a5 },
+TRUTH noexec-1 dd { 0x15, 2, 0, 0x000000a6 },
+TRUTH noexec-1 dd { 0x6, 0, 0, 0x7fff0000 },
+TRUTH noexec-1 dd { 0x6, 0, 0, 0x80000000 },
+TRUTH noexec-1 dd { 0x6, 0, 0, 0x0005000d },
+TRUTH noexec-2 dd { 0x20, 0, 0, 0x00000004 },
+TRUTH noexec-2 dd { 0x15, 0, 4, 0xc000003e },
+TRUTH noexec-2 dd { 0x20, 0, 0, 0x00000000 },
+TRUTH noexec-2 dd { 0x15, 3, 0, 0x0000003b },
+TRUTH noexec-2 dd { 0x15, 2, 0, 0x00000142 },
+TRUTH noexec-2 dd { 0x6, 0, 0, 0x7fff0000 },
+TRUTH noexec-2 dd { 0x6, 0, 0, 0x80000000 },
+TRUTH noexec-2 dd { 0x6, 0, 0, 0x00050001 },
+TRUTH seccomp worker-0 pid=107 default=KILL_PROCESS allow=read,write,close,exit,exit_group,rt_sigreturn,rt_sigaction,rt_sigprocmask,pause,nanosleep,clock_nanosleep,futex,getpid,brk,mmap,munmap
+TRUTH seccomp worker-0 pfc-begin
+#
+# pseudo filter code start
+#
+# filter for arch x86_64 (3221225534)
+if ($arch == 3221225534)
+  # filter for syscall "exit_group" (231) [priority: 65535]
+  if ($syscall == 231)
+    action ALLOW;
+  # filter for syscall "clock_nanosleep" (230) [priority: 65535]
+  if ($syscall == 230)
+    action ALLOW;
+  # filter for syscall "futex" (202) [priority: 65535]
+  if ($syscall == 202)
+    action ALLOW;
+  # filter for syscall "exit" (60) [priority: 65535]
+  if ($syscall == 60)
+    action ALLOW;
+  # filter for syscall "getpid" (39) [priority: 65535]
+  if ($syscall == 39)
+    action ALLOW;
+  # filter for syscall "nanosleep" (35) [priority: 65535]
+  if ($syscall == 35)
+    action ALLOW;
+  # filter for syscall "pause" (34) [priority: 65535]
+  if ($syscall == 34)
+    action ALLOW;
+  # filter for syscall "rt_sigreturn" (15) [priority: 65535]
+  if ($syscall == 15)
+    action ALLOW;
+  # filter for syscall "rt_sigprocmask" (14) [priority: 65535]
+  if ($syscall == 14)
+    action ALLOW;
+  # filter for syscall "rt_sigaction" (13) [priority: 65535]
+  if ($syscall == 13)
+    action ALLOW;
+  # filter for syscall "brk" (12) [priority: 65535]
+  if ($syscall == 12)
+    action ALLOW;
+  # filter for syscall "munmap" (11) [priority: 65535]
+  if ($syscall == 11)
+    action ALLOW;
+  # filter for syscall "mmap" (9) [priority: 65535]
+  if ($syscall == 9)
+    action ALLOW;
+  # filter for syscall "close" (3) [priority: 65535]
+  if ($syscall == 3)
+    action ALLOW;
+  # filter for syscall "write" (1) [priority: 65535]
+  if ($syscall == 1)
+    action ALLOW;
+  # filter for syscall "read" (0) [priority: 65535]
+  if ($syscall == 0)
+    action ALLOW;
+  # default action
+  action KILL_PROCESS;
+# invalid architecture action
+action KILL;
+#
+# pseudo filter code end
+#
+TRUTH seccomp worker-0 pfc-end
+TRUTH seccomp worker-1 pid=108 default=KILL_PROCESS allow=read,write,close,exit,exit_group,rt_sigreturn,rt_sigaction,rt_sigprocmask,pause,nanosleep,clock_nanosleep,futex,getpid,brk,mmap,munmap
+TRUTH seccomp worker-2 pid=109 unconfined
+TRUTH seccomp worker-3 pid=110 default=KILL_PROCESS allow=read,write,close,exit,exit_group,rt_sigreturn,rt_sigaction,rt_sigprocmask,pause,nanosleep,clock_nanosleep,futex,getpid,brk,mmap,munmap
+PID   PPID  COMMAND          COMMAND
+    1     0 init             {init} /bin/sh /init
+    2     0 kthreadd         [kthreadd]
+    3     2 rcu_gp           [rcu_gp]
+    4     2 rcu_par_gp       [rcu_par_gp]
+    5     2 slub_flushwq     [slub_flushwq]
+    6     2 netns            [netns]
+    7     2 kworker/0:0-rcu  [kworker/0:0-rcu]
+    8     2 kworker/0:0H-ev  [kworker/0:0H-ev]
+    9     2 kworker/u2:0-ev  [kworker/u2:0-ev]
+   10     2 mm_percpu_wq     [mm_percpu_wq]
+   11     2 rcu_tasks_kthre  [rcu_tasks_kthre]
+   12     2 rcu_tasks_rude_  [rcu_tasks_rude_]
+   13     2 rcu_tasks_trace  [rcu_tasks_trace]
+   14     2 ksoftirqd/0      [ksoftirqd/0]
+   15     2 rcu_preempt      [rcu_preempt]
+   16     2 migration/0      [migration/0]
+   17     2 kworker/0:1-rcu  [kworker/0:1-rcu]
+   18     2 cpuhp/0          [cpuhp/0]
+   20     2 kdevtmpfs        [kdevtmpfs]
+   21     2 inet_frag_wq     [inet_frag_wq]
+   22     2 kauditd          [kauditd]
+   23     2 khungtaskd       [khungtaskd]
+   24     2 kworker/u2:1-ev  [kworker/u2:1-ev]
+   25     2 oom_reaper       [oom_reaper]
+   26     2 writeback        [writeback]
+   27     2 kworker/u2:2     [kworker/u2:2]
+   28     2 kcompactd0       [kcompactd0]
+   29     2 ksmd             [ksmd]
+   30     2 kintegrityd      [kintegrityd]
+   31     2 kblockd          [kblockd]
+   32     2 blkcg_punt_bio   [blkcg_punt_bio]
+   33     2 tpm_dev_wq       [tpm_dev_wq]
+   34     2 quota_events_un  [quota_events_un]
+   35     2 kworker/0:1H     [kworker/0:1H]
+   36     2 kswapd0          [kswapd0]
+   42     2 kthrotld         [kthrotld]
+   45     2 kworker/0:2-eve  [kworker/0:2-eve]
+   47     2 acpi_thermal_pm  [acpi_thermal_pm]
+   48     2 nvme-wq          [nvme-wq]
+   49     2 nvme-reset-wq    [nvme-reset-wq]
+   50     2 nvme-delete-wq   [nvme-delete-wq]
+   51     2 mld              [mld]
+   52     2 ipv6_addrconf    [ipv6_addrconf]
+   57     2 kstrp            [kstrp]
+   61     2 kworker/u3:0     [kworker/u3:0]
+   89     1 tcpdump          tcpdump -i lo -n -w /dev/null udp and dst port 53
+   94     1 tcpdump          tcpdump -i lo -n -w /dev/null tcp[tcpflags] & (tcp
+   95     1 cbpf-trigger     /usr/local/bin/cbpf-trigger trigger
+   96     1 cbpf-udptrigger  /usr/local/bin/cbpf-udptrigger udptrigger
+   99     1 cbpf-strict      /usr/local/bin/cbpf-strict strict
+  101     1 cbpf-dockerish   /usr/local/bin/cbpf-dockerish dockerish
+  103     1 cbpf-noexec      /usr/local/bin/cbpf-noexec noexec
+  105     1 cbpf-pool        /usr/local/bin/cbpf-pool pool
+  107   105 cbpf-pool        /usr/local/bin/cbpf-pool pool
+  108   105 cbpf-pool        /usr/local/bin/cbpf-pool pool
+  109   105 cbpf-pool        /usr/local/bin/cbpf-pool pool
+  110   105 cbpf-pool        /usr/local/bin/cbpf-pool pool
+  111     1 ps               ps -o pid,ppid,comm,args
+TRUTH status pid=1 comm=init NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=10 comm=mm_percpu_wq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=101 comm=cbpf-dockerish NoNewPrivs: 0 Seccomp: 2 Seccomp_filters: 1 
+TRUTH status pid=103 comm=cbpf-noexec NoNewPrivs: 1 Seccomp: 2 Seccomp_filters: 2 
+TRUTH status pid=105 comm=cbpf-pool NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=107 comm=cbpf-pool NoNewPrivs: 1 Seccomp: 2 Seccomp_filters: 1 
+TRUTH status pid=108 comm=cbpf-pool NoNewPrivs: 1 Seccomp: 2 Seccomp_filters: 1 
+TRUTH status pid=109 comm=cbpf-pool NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=11 comm=rcu_tasks_kthread NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=110 comm=cbpf-pool NoNewPrivs: 1 Seccomp: 2 Seccomp_filters: 1 
+TRUTH status pid=12 comm=rcu_tasks_rude_kthread NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=13 comm=rcu_tasks_trace_kthread NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=14 comm=ksoftirqd/0 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=15 comm=rcu_preempt NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=16 comm=migration/0 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=17 comm=kworker/0:1-rcu_gp NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=18 comm=cpuhp/0 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=2 comm=kthreadd NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=20 comm=kdevtmpfs NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=21 comm=inet_frag_wq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=22 comm=kauditd NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=23 comm=khungtaskd NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=24 comm=kworker/u2:1-events_unbound NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=25 comm=oom_reaper NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=26 comm=writeback NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=27 comm=kworker/u2:2 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=28 comm=kcompactd0 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=29 comm=ksmd NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=3 comm=rcu_gp NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=30 comm=kintegrityd NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=31 comm=kblockd NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=32 comm=blkcg_punt_bio NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=33 comm=tpm_dev_wq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=34 comm=quota_events_un NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=35 comm=kworker/0:1H NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=36 comm=kswapd0 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=4 comm=rcu_par_gp NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=42 comm=kthrotld NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=45 comm=kworker/0:2-events NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=47 comm=acpi_thermal_pm NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=48 comm=nvme-wq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=49 comm=nvme-reset-wq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=5 comm=slub_flushwq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=50 comm=nvme-delete-wq NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=51 comm=mld NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=52 comm=ipv6_addrconf NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=57 comm=kstrp NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=6 comm=netns NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=61 comm=kworker/u3:0 NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=7 comm=kworker/0:0-rcu_gp NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=8 comm=kworker/0:0H-events_highpri NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=89 comm=tcpdump NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH fd pid=89 fd=4 socket:[10218]
+TRUTH status pid=9 comm=kworker/u2:0-events_unbound NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH status pid=94 comm=tcpdump NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH fd pid=94 fd=4 socket:[10225]
+TRUTH status pid=95 comm=cbpf-trigger NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH fd pid=95 fd=3 socket:[10223]
+TRUTH status pid=96 comm=cbpf-udptrigger NoNewPrivs: 0 Seccomp: 0 Seccomp_filters: 0 
+TRUTH fd pid=96 fd=3 socket:[10222]
+TRUTH status pid=99 comm=cbpf-strict NoNewPrivs: 0 Seccomp: 1 Seccomp_filters: 0 
+sk               RefCnt Type Proto  Iface R Rmem   User   Inode
+000000005dddcc35 3      3    0003   1     1 0      0      10218 
+00000000c6c733b0 3      3    0003   0     1 0      0      10223 
+000000008abf7c67 3      3    0003   1     1 0      0      10225 
+GUEST_READY_FOR_DUMP
